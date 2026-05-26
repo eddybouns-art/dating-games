@@ -1,7 +1,7 @@
 // Herzrasen: Kitsch-Quest — super-kitschiger Dating-Plattformer
 // Steuerung: Links/Rechts (Pfeile oder A/D), Space = Sprung, Enter = Auswahl, R = Neustart
 
-import kaboom from "unpkg.com";
+import kaboom from "[unpkg.com](https://unpkg.com/kaboom/dist/kaboom.mjs)";
 
 kaboom({
   global: true,
@@ -27,7 +27,6 @@ gravity(GRAVITY);
 // Minimalsprites (Platzhalter aus einfachen Formen)
 function heartSprite() {
   const g = new ImageData(8,8);
-  // kleiner Pixel-Herz-Generator (8x8), rosa
   const pat = [
     "00100100",
     "01111110",
@@ -88,12 +87,10 @@ function tileSolid(w=16,h=16,c=[90,70,120]) { return [rect(w,h), area(), solid()
 function tileCloud(){ return [rect(16,8), area(), color(200,210,255)]; }
 function tileSlime(){ return [rect(16,8), area(), color(110,255,180), "slime"]; }
 
-// Spieler
+// Spieler / Gegner / Collectibles — funktionierende Bild-URLs
 loadSprite("player", "[i.imgur.com](https://i.imgur.com/Wb1qfhK.png)"); // Demo-Sprite; gern ersetzen
-// Gegner (Teddy/Schmetterling Platzhalter)
-loadSprite("foe", "[i.imgur.com](https://i.imgur.com/6L89G7s.png)");    // Platzhalter
-// Rose-Collectible
-loadSprite("rose", "[i.imgur.com](https://i.imgur.com/u5KQ4hQ.png)");   // Platzhalter
+loadSprite("foe",    "[i.imgur.com](https://i.imgur.com/6L89G7s.png)"); // Platzhalter
+loadSprite("rose",   "[i.imgur.com](https://i.imgur.com/u5KQ4hQ.png)"); // Platzhalter
 
 // Sound (leichte Chiptune-SFX via WebAudio-Pips)
 function blip(freq=880, dur=0.08, type="square", vol=0.05){
@@ -118,8 +115,8 @@ const sfx = {
 
 // Spielzustand
 let stats = {
-  hearts: 0,     // gesammelte Herzen
-  roses: 0,      // gesammelte Rosen
+  hearts: 0,
+  roses: 0,
   time: 0,
   lives: 3,
   level: 0,
@@ -185,7 +182,6 @@ function sparkleBurst(posi, n=8){
 
 // HUD
 function drawHUD() {
-  // Panel
   drawRect({
     width: width(),
     height: 20,
@@ -239,7 +235,7 @@ function buildLevel(i) {
   const L = LEVELS[i];
   setBackground(rgb(...L.bg));
 
-  const level = addLevel(L.map, {
+  addLevel(L.map, {
     tileWidth: 16,
     tileHeight: 16,
     tiles: {
@@ -255,9 +251,8 @@ function buildLevel(i) {
   });
 
   const player = get("player")[0];
-  player.pos = player.pos.add(0,-2);
 
-  // Kamera
+  // Kamera und Timer
   onUpdate(() => {
     camPos(vec2(clamp(player.pos.x, width()/2, 9999), height()/2));
     stats.time += dt();
@@ -267,7 +262,6 @@ function buildLevel(i) {
   onUpdate(() => {
     get("foe").forEach(f => {
       f.move(50 * f.dir, 0);
-      // einfache Wendelogik: an Kante oder Kollision umdrehen
       if (rand(0,1) < 0.005) f.dir *= -1;
     });
   });
@@ -287,13 +281,11 @@ function buildLevel(i) {
 
   // Gegnerkontakt
   player.onCollide("foe", (f) => {
-    // von oben -> Gegner besiegt
     if (player.vel.y > 0) {
       destroy(f);
       player.jump(JUMP * 0.8);
       sfx.ok(); sparkleBurst(f.pos, 12);
     } else {
-      // Schaden
       sfx.hit(); sparkleBurst(player.pos, 16);
       player.color = rgb(255,80,120);
       wait(0.1, () => player.color = rgb(255,255,255));
@@ -318,7 +310,6 @@ function buildLevel(i) {
 }
 
 scene("level", () => {
-  // Reset bei neuem Durchlauf, Level bleibt erhalten
   if (stats.level === 0) {
     stats.hearts = 0; stats.roses = 0; stats.time = 0; stats.lives = 3;
   }
@@ -326,7 +317,6 @@ scene("level", () => {
 });
 
 function dialogOptions() {
-  // Freischaltung basierend auf Stats: mehr Kitsch bei mehr Sammeln
   const generous = stats.hearts >= 4 || stats.roses >= 2;
   const mid = stats.hearts >= 2 || stats.roses >= 1;
   if (generous) {
@@ -352,9 +342,7 @@ function dialogOptions() {
 
 scene("dialog", () => {
   setBackground(rgb(30, 18, 40));
-  const banner = add([
-    rect(width()-40, height()-60), pos(20,30), color(40,24,50), outline(2, PINK), area(),
-  ]);
+  add([rect(width()-40, height()-60), pos(20,30), color(40,24,50), outline(2, PINK), area()]);
 
   add([text("Date-Time! 💞", { size: 20 }), pos(32, 40), color(ROSE)]);
   add([text(`Hearts: ${stats.hearts}  |  Roses: ${stats.roses}  |  Time: ${Math.floor(stats.time)}s`, { size: 12 }), pos(32, 66), color(GOLD)]);
@@ -408,7 +396,6 @@ scene("result", ({ ok }) => {
 
   onKeyPress("enter", () => {
     if (ok) {
-      // Nächstes Level oder Finale
       if (stats.level < LEVELS.length - 1) {
         stats.level += 1;
         go("level");
@@ -416,7 +403,6 @@ scene("result", ({ ok }) => {
         go("finale");
       }
     } else {
-      // Wiederhole Level
       go("level");
     }
   });
@@ -435,15 +421,12 @@ scene("finale", () => {
   add([text("ULTRA MATCH 💞💍", { size: 26 }), pos(center().x, 40), anchor("center"), color(ROSE)]);
   add([text("Kitsch-Overdrive aktiviert!", { size: 14 }), pos(center().x, 70), anchor("center"), color(GOLD)]);
 
-  // Regenbogen-Scroll
   const bars = [];
   for (let i=0;i<10;i++){
     const b = add([rect(width(), 8), pos(0, 100 + i*10), color(hsl2rgb(rand(0,1), 0.8, 0.6)), "bar"]);
     bars.push(b);
   }
-  onUpdate(()=>{
-    bars.forEach((b,i)=> { b.pos.x = (b.pos.x - (20+i*2)*dt()) % width(); });
-  });
+  onUpdate(()=> bars.forEach((b,i)=> { b.pos.x = (b.pos.x - (20+i*2)*dt()) % width(); }));
   sparkleBurst(center(), 40);
 
   add([text("Danke fürs Spielen! Enter = New Game", { size: 12 }), pos(center().x, height()-40), anchor("center"), color(ROSE)]);
