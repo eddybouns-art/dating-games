@@ -1,7 +1,7 @@
 // Herzrasen: Kitsch-Quest — super-kitschiger Dating-Plattformer
 // Steuerung: Links/Rechts (Pfeile oder A/D), Space = Sprung, Enter = Auswahl, R = Neustart
 
-import kaboom from "unpkg.com";
+import kaboom from "https://unpkg.com/kaboom/dist/kaboom.mjs";
 
 kaboom({
   global: true,
