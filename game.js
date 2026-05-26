@@ -21,7 +21,7 @@ const SKY = color(170, 200, 255);
 const SPEED = 130;
 const JUMP = 360;
 const GRAVITY = 980;
-gravity(GRAVITY);
+setGravity(GRAVITY);
 
 // Minimalsprites (Pixel-Herz & Stern)
 function heartSprite() {
