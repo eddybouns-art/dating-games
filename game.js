@@ -82,7 +82,7 @@ loadSprite("spark", imgFromImageData(starSprite()));
 function tileSolid(w = 16, h = 16, c = [90, 70, 120]) { return [rect(w, h), area(), solid(), color(...c)]; }
 function tileCloud() { return [rect(16, 8), area(), color(200, 210, 255)]; }
 
-// Externe Platzhalter-Sprites
+// Platzhalter-Sprites (kannst du später ersetzen)
 loadSprite("player", "[i.imgur.com](https://i.imgur.com/Wb1qfhK.png)");
 loadSprite("foe", "[i.imgur.com](https://i.imgur.com/6L89G7s.png)");
 loadSprite("rose", "[i.imgur.com](https://i.imgur.com/u5KQ4hQ.png)");
