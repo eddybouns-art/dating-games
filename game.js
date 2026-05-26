@@ -79,7 +79,7 @@ loadSprite("heart8", imgFromImageData(heartSprite()));
 loadSprite("spark", imgFromImageData(starSprite()));
 
 // Einfache Tiles
-function tileSolid(w = 16, h = 16, c = [90, 70, 120]) { return [rect(w, h), area(), solid(), color(...c)]; }
+function tileSolid(w = 16, h = 16, c = [90, 70, 120]) { return [rect(w, h), area(), body({ isStatic: true }), color(...c)]; }
 function tileCloud() { return [rect(16, 8), area(), color(200, 210, 255)]; }
 
 // Platzhalter-Sprites (kannst du später ersetzen)
